@@ -1,2 +1,33 @@
 /* You can add global styles to this file, and also import other style files */
 @import "tailwindcss";
+@import "bootstrap-icons/font/bootstrap-icons.css";
+body {
+  font-family: "Montserrat";
+}
+
+.custom-background {
+  background-color: #f5f0e6;
+}
+
+.custom-secondary {
+  background-color: #fffaf3;
+}
+
+.custom-green {
+  background-color: #243c3c;
+}
+
+.custom-green-text {
+  color: #243c3c;
+}
+
+.custom-green-border {
+  border-color: #243c3c;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}

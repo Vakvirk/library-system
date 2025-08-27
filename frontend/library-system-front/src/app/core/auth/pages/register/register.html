@@ -1,0 +1,97 @@
+<div class="flex justify-center items-center h-full">
+  <div
+    class="flex flex-col rounded-2xl w-[clamp(320px,28vw,500px)] h-[clamp(400px,70vh,700px)] custom-secondary shadow-[0_8px_18px_rgba(0,0,0,0.6)] overflow-auto"
+  >
+    <div
+      class="flex flex-col h-full justify-center gap-y-[clamp(1rem,2vw,2.5rem)] px-4"
+    >
+      <div class="flex justify-between items-center w-full gap-x-4">
+        <button
+          type="button"
+          class="custom-green text-white rounded-md h-[clamp(2rem,2.5vw,4rem)] w-[clamp(6rem,50%,32rem)] text-[clamp(1rem,1.3vw,2rem)] overflow-hidden"
+        >
+          Logowanie
+        </button>
+        <button
+          type="button"
+          class="custom-secondary custom-green-text border custom-green-border rounded-md h-[clamp(2rem,2.5vw,4rem)] w-[clamp(6rem,50%,32rem)] text-[clamp(1rem,1.3vw,2rem)] overflow-hidden"
+        >
+          Rejestracja
+        </button>
+      </div>
+
+      <form
+        [formGroup]="form"
+        (ngSubmit)="onSubmit()"
+        class="flex flex-col gap-y-[clamp(1rem,2vw,2.5rem)] h-4/5"
+      >
+        <div
+          class="flex flex-col justify-start gap-y-[clamp(1rem,1vw,2.5rem)] h-[80%]"
+        >
+          <div class="flex flex-col">
+            <label
+              for="Name"
+              class="custom-green-text text-[clamp(1rem,1.5vw,2rem)]"
+              >Imię:</label
+            >
+            <input
+              type="text"
+              name="Name"
+              class="border custom-green-border w-full rounded-md min-h-[2vw]"
+              [formControl]="form.controls.name"
+            />
+          </div>
+          <div class="flex flex-col">
+            <label
+              for="LastName"
+              class="custom-green-text text-[clamp(1rem,1.5vw,2rem)]"
+              >Nazwisko:</label
+            >
+            <input
+              type="text"
+              name="LastName"
+              class="border custom-green-border w-full rounded-md px-1.5 min-h-[2vw] h-[2vw]"
+              [formControl]="form.controls.lastName"
+            />
+          </div>
+          <div class="flex flex-col">
+            <label
+              for="Email"
+              class="custom-green-text text-[clamp(1rem,1.5vw,2rem)]"
+              >Email:</label
+            >
+            <input
+              type="email"
+              name="Email"
+              class="border custom-green-border w-full rounded-md px-1.5 min-h-[2vw] h-[2vw]"
+              [formControl]="form.controls.email"
+            />
+          </div>
+          <div class="flex flex-col">
+            <label
+              for="Password"
+              class="custom-green-text text-[clamp(1rem,1.5vw,2rem)]"
+              >Hasło:</label
+            >
+            <input
+              type="password"
+              name="Password"
+              class="border custom-green-border w-full rounded-md px-1.5 min-h-[2vw] h-[2vw]"
+              [formControl]="form.controls.password"
+            />
+          </div>
+          <!-- If fewer than max fields, there will be empty space below -->
+        </div>
+        <!-- Button always at bottom of the wrapper -->
+        <div class="grow flex items-center justify-center">
+          <button
+            type="submit"
+            class="custom-green text-white rounded-md h-[clamp(2rem,2.5vw,4rem)] w-[clamp(8rem,50%,32rem)] mx-auto text-[clamp(1rem,1.3vw,2rem)] overflow-hidden"
+          >
+            Zarejestruj
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

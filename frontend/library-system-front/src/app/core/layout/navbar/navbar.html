@@ -1,0 +1,32 @@
+<div
+  class="flex row-auto custom-green h-14 w-full text-white items-center justify-between px-4"
+>
+  <div class="text-2xl">Wypożyczalnia książek</div>
+  <div class="flex space-x-6">
+    @if (role == "user") {
+    <a href="#">Biblioteka książek</a>
+    <a href="#">Wypożyczone książki</a>
+    <a href="#">Moje wnioski</a>
+    } @else if (role && role != "user") {
+    <a href="#">Biblioteka książek</a>
+    <a href="#">Książki</a>
+    <a href="#">Wnioski</a>
+    } @if(email) {
+    <div class="flex space-x-1 cursor-pointer">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        fill="currentColor"
+        class="bi bi-person-fill"
+        viewBox="0 0 16 16"
+      >
+        <path
+          d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"
+        />
+      </svg>
+      <p>{{ email }}</p>
+    </div>
+    }
+  </div>
+</div>
