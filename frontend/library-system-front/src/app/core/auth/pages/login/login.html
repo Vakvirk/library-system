@@ -8,14 +8,14 @@
       <div class="flex justify-between items-center w-full gap-x-4">
         <button
           type="button"
-          class="custom-button-green text-white rounded-md h-[clamp(2rem,2.5vw,4rem)] w-[clamp(6rem,50%,32rem)] text-[clamp(1rem,1.3vw,2rem)] overflow-hidden cursor-pointer"
-          [routerLink]="'/login'"
+          class="custom-secondary custom-green-text border custom-green-border rounded-md h-[clamp(2rem,2.5vw,4rem)] w-[clamp(6rem,50%,32rem)] text-[clamp(1rem,1.3vw,2rem)] overflow-hidden"
         >
           Logowanie
         </button>
         <button
           type="button"
-          class="custom-secondary custom-green-text border custom-green-border rounded-md h-[clamp(2rem,2.5vw,4rem)] w-[clamp(6rem,50%,32rem)] text-[clamp(1rem,1.3vw,2rem)] overflow-hidden"
+          class="custom-button-green text-white rounded-md h-[clamp(2rem,2.5vw,4rem)] w-[clamp(6rem,50%,32rem)] text-[clamp(1rem,1.3vw,2rem)] overflow-hidden cursor-pointer"
+          [routerLink]="'/register'"
         >
           Rejestracja
         </button>
@@ -29,32 +29,7 @@
         <div
           class="flex flex-col justify-start gap-y-[clamp(1rem,1vw,2.5rem)] h-[80%]"
         >
-          <div class="flex flex-col">
-            <label
-              for="Name"
-              class="custom-green-text text-[clamp(1rem,1.5vw,2rem)]"
-              >Imię:</label
-            >
-            <input
-              type="text"
-              name="Name"
-              class="border custom-green-border w-full rounded-md h-[2vw] px-1.5 text-[clamp(1rem,1.2vw,2rem)]"
-              [formControl]="form.controls.name"
-            />
-          </div>
-          <div class="flex flex-col">
-            <label
-              for="LastName"
-              class="custom-green-text text-[clamp(1rem,1.5vw,2rem)]"
-              >Nazwisko:</label
-            >
-            <input
-              type="text"
-              name="LastName"
-              class="border custom-green-border w-full rounded-md px-1.5 h-[2vw] text-[clamp(1rem,1.2vw,2rem)]"
-              [formControl]="form.controls.lastName"
-            />
-          </div>
+          <div class="h-[4.25vw]"></div>
           <div class="flex flex-col">
             <label
               for="Email"
@@ -89,7 +64,7 @@
             type="submit"
             class="custom-button-green text-white rounded-md h-[clamp(2rem,2.5vw,4rem)] w-[clamp(8rem,50%,32rem)] mx-auto text-[clamp(1rem,1.3vw,2rem)] overflow-hidden cursor-pointer"
           >
-            Zarejestruj
+            Zaloguj
           </button>
         </div>
       </form>

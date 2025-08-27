@@ -5,6 +5,10 @@ body {
   font-family: "Montserrat";
 }
 
+.custom-green {
+  background-color: #243c3c;
+}
+
 .custom-background {
   background-color: #f5f0e6;
 }
@@ -13,8 +17,12 @@ body {
   background-color: #fffaf3;
 }
 
-.custom-green {
+.custom-button-green {
   background-color: #243c3c;
+}
+
+.custom-button-green:hover {
+  background-color: #345757;
 }
 
 .custom-green-text {
