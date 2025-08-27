@@ -16,10 +16,11 @@ import { AuthStore } from '../../services/auth-store';
 })
 export class Login {
   authService = inject(AuthStore);
+  credentialsValid: boolean | undefined = undefined;
 
   form = new FormGroup({
     email: new FormControl('', {
-      validators: [Validators.required],
+      validators: [Validators.required, Validators.email],
     }),
     password: new FormControl('', {
       validators: [Validators.required],
@@ -27,9 +28,14 @@ export class Login {
   });
 
   onSubmit() {
-    this.authService.setUsername(this.form.controls.email.value);
-    this.authService.setRole('user');
+    if (this.form.valid) {
+      this.authService.setUsername(this.form.controls.email.value);
+      this.authService.setRole('user');
+      this.credentialsValid = true;
 
-    console.log(this.authService.username());
+      console.log(this.authService.username());
+    } else {
+      this.credentialsValid = false;
+    }
   }
 }

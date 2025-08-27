@@ -30,25 +30,33 @@ export class Register {
   });
 
   get nameIsInvalid() {
-    return this.form.controls.name.invalid;
+    return this.form.controls.name.invalid && this.form.controls.name.touched;
   }
 
   get lastNameIsInvalid() {
-    return this.form.controls.lastName.invalid;
+    return (
+      this.form.controls.lastName.invalid && this.form.controls.lastName.touched
+    );
   }
 
   get emailIsInvalid() {
-    return this.form.controls.email.invalid;
+    return (
+      this.form.controls.email.invalid &&
+      this.form.controls.email.dirty &&
+      this.form.controls.email.touched
+    );
   }
 
   get passwordIsInvalid() {
-    return this.form.controls.password.invalid;
+    return (
+      this.form.controls.password.invalid &&
+      this.form.controls.password.dirty &&
+      this.form.controls.password.touched
+    );
   }
 
   onSubmit() {
     if (this.form.invalid) {
-      console.log('Email invalid: ' + this.emailIsInvalid);
-      console.log('Password invalid: ' + this.passwordIsInvalid);
       console.log('Form is invalid');
     } else {
       const data = [

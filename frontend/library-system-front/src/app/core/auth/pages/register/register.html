@@ -1,11 +1,11 @@
 <div class="flex justify-center items-center h-full">
   <div
-    class="flex flex-col rounded-2xl w-[clamp(320px,28vw,500px)] h-[clamp(400px,70vh,700px)] custom-secondary shadow-[0_8px_18px_rgba(0,0,0,0.6)] overflow-auto"
+    class="flex flex-col rounded-2xl w-[clamp(320px,28vw,500px)] min-h-[65vh] custom-secondary shadow-[0_8px_18px_rgba(0,0,0,0.6)] overflow-auto"
   >
     <div
       class="flex flex-col h-full justify-center gap-y-[clamp(1rem,2vw,2.5rem)] px-4"
     >
-      <div class="flex justify-between items-center w-full gap-x-4">
+      <div class="flex justify-between items-center w-full gap-x-4 mt-6">
         <button
           type="button"
           class="custom-button-green text-white rounded-md h-[clamp(2rem,2.5vw,4rem)] w-[clamp(6rem,50%,32rem)] text-[clamp(1rem,1.3vw,2rem)] overflow-hidden cursor-pointer"
@@ -27,64 +27,92 @@
         class="flex flex-col gap-y-[clamp(1rem,2vw,2.5rem)] h-4/5"
       >
         <div
-          class="flex flex-col justify-start gap-y-[clamp(1rem,1vw,2.5rem)] h-[80%]"
+          class="flex flex-col justify-start gap-y-[clamp(1rem,1vw,2.5rem)] h-clamp[(80%, 80%, 90%)]"
         >
           <div class="flex flex-col">
-            <label
-              for="Name"
-              class="custom-green-text text-[clamp(1rem,1.5vw,2rem)]"
+            <label class="custom-green-text text-[clamp(1rem,1.5vw,2rem)]"
               >Imię:</label
             >
             <input
               type="text"
               name="Name"
-              class="border custom-green-border w-full rounded-md h-[2vw] px-1.5 text-[clamp(1rem,1.2vw,2rem)]"
+              class="border {{
+                nameIsInvalid
+                  ? 'border-red-700 bg-rose-50'
+                  : 'custom-green-border'
+              }} w-full rounded-md h-[2vw] px-1.5 text-[clamp(1rem,1.2vw,2rem)]"
               [formControl]="form.controls.name"
             />
+            @if (nameIsInvalid) {
+            <p class="text-clamp([1rem, 1vw, 2rem)] text-red-600">
+              To pole jest wymagane.
+            </p>
+            }
           </div>
           <div class="flex flex-col">
-            <label
-              for="LastName"
-              class="custom-green-text text-[clamp(1rem,1.5vw,2rem)]"
+            <label class="custom-green-text text-[clamp(1rem,1.5vw,2rem)]"
               >Nazwisko:</label
             >
             <input
               type="text"
               name="LastName"
-              class="border custom-green-border w-full rounded-md px-1.5 h-[2vw] text-[clamp(1rem,1.2vw,2rem)]"
+              class="border {{
+                lastNameIsInvalid
+                  ? 'border-red-700 bg-rose-50'
+                  : 'custom-green-border'
+              }} w-full rounded-md px-1.5 h-[2vw] text-[clamp(1rem,1.2vw,2rem)"
               [formControl]="form.controls.lastName"
             />
+            @if(lastNameIsInvalid) {
+            <p class="text-clamp([1rem, 1vw, 2rem)] text-red-600">
+              To pole jest wymagane.
+            </p>
+            }
           </div>
           <div class="flex flex-col">
-            <label
-              for="Email"
-              class="custom-green-text text-[clamp(1rem,1.5vw,2rem)]"
+            <label class="custom-green-text text-[clamp(1rem,1.5vw,2rem)]"
               >Adres e-mail:</label
             >
             <input
               type="email"
               name="Email"
-              class="border custom-green-border w-full rounded-md px-1.5 h-[2vw] text-[clamp(1rem,1.2vw,2rem)]"
+              class="border {{
+                emailIsInvalid
+                  ? 'border-red-700 bg-rose-50'
+                  : 'custom-green-border'
+              }} w-full rounded-md px-1.5 h-[2vw] text-[clamp(1rem,1.2vw,2rem)]"
               [formControl]="form.controls.email"
             />
+            @if(emailIsInvalid) {
+            <p class="text-clamp([1rem, 1vw, 2rem)] text-red-600">
+              Podaj poprawny adres e-mail.
+            </p>
+            }
           </div>
           <div class="flex flex-col">
-            <label
-              for="Password"
-              class="custom-green-text text-[clamp(1rem,1.5vw,2rem)]"
+            <label class="custom-green-text text-[clamp(1rem,1.5vw,2rem)]"
               >Hasło:</label
             >
             <input
               type="password"
               name="Password"
-              class="border custom-green-border w-full rounded-md px-1.5 h-[2vw] text-[clamp(1rem,1.2vw,2rem)] font-mono"
+              class="border {{
+                passwordIsInvalid
+                  ? 'border-red-700 bg-rose-50'
+                  : 'custom-green-border'
+              }} w-full rounded-md px-1.5 h-[2vw] text-[clamp(1rem,1.2vw,2rem)] font-mono"
               [formControl]="form.controls.password"
             />
+            @if (passwordIsInvalid) {
+            <p class="text-clamp([1rem, 1vw, 2rem)] text-red-600">
+              Hasło musi mieć conajmniej 8 znaków, wielką literę, liczbę i znak
+              specjalny.
+            </p>
+            }
           </div>
-          <!-- If fewer than max fields, there will be empty space below -->
         </div>
         <!-- Button always at bottom of the wrapper -->
-        <div class="grow flex items-center justify-center">
+        <div class="grow flex items-center justify-center mb-8 pt-2">
           <button
             type="submit"
             class="custom-button-green text-white rounded-md h-[clamp(2rem,2.5vw,4rem)] w-[clamp(8rem,50%,32rem)] mx-auto text-[clamp(1rem,1.3vw,2rem)] overflow-hidden cursor-pointer"
