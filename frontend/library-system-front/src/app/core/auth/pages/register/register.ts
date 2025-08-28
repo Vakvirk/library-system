@@ -5,7 +5,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -25,7 +25,11 @@ export class Register {
       validators: [Validators.email, Validators.required],
     }),
     password: new FormControl('', {
-      validators: [Validators.minLength(8), Validators.required],
+      validators: [
+        Validators.minLength(8),
+        Validators.required,
+        Validators.pattern('(?=.*[0-9])(?=.*[A-Z])(?=.*[!@#$%^&*()]).+$'),
+      ],
     }),
   });
 
@@ -65,8 +69,6 @@ export class Register {
         this.form.value.email,
         this.form.value.password,
       ];
-      console.log(this.form.invalid);
-      console.log(this.form.controls.password);
       console.log(data);
     }
   }

@@ -15,6 +15,7 @@ import { AuthStore } from '../../services/auth-store';
   styleUrl: './login.css',
 })
 export class Login {
+  credentials = ['user@example.com', 'Zaq12wsx!@'];
   authService = inject(AuthStore);
   credentialsValid: boolean | undefined = undefined;
 
@@ -27,13 +28,20 @@ export class Login {
     }),
   });
 
+  validateCredentials(username: string | null, password: string | null) {
+    return username === this.credentials[0] && password === this.credentials[1];
+  }
+
   onSubmit() {
-    if (this.form.valid) {
+    if (
+      this.validateCredentials(
+        this.form.controls.email.value,
+        this.form.controls.password.value
+      )
+    ) {
       this.authService.setUsername(this.form.controls.email.value);
       this.authService.setRole('user');
       this.credentialsValid = true;
-
-      console.log(this.authService.username());
     } else {
       this.credentialsValid = false;
     }
