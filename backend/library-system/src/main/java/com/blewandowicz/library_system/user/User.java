@@ -63,17 +63,11 @@ public class User implements UserDetails {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    // Przy utowrzeniu
-    @PrePersist
-    public void PrePersist() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
+    // Implementacja UserDetails
 
-    // Przy updacie
-    @PreUpdate
-    public void PreUpdate() {
-        updatedAt = LocalDateTime.now();
+    @Override
+    public boolean isEnabled() {
+        return isActive;
     }
 
     @Override
@@ -90,4 +84,18 @@ public class User implements UserDetails {
     public String getUsername() {
         return email;
     }
+
+    // Przy utowrzeniu
+    @PrePersist
+    public void PrePersist() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    // Przy updacie
+    @PreUpdate
+    public void PreUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
+
 }
