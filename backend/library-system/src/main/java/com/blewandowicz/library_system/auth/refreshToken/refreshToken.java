@@ -3,8 +3,6 @@ package com.blewandowicz.library_system.auth.refreshToken;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import org.springframework.cglib.core.Local;
-
 import com.blewandowicz.library_system.user.User;
 
 import jakarta.persistence.Column;

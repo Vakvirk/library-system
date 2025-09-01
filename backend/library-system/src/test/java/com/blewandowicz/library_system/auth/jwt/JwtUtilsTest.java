@@ -18,19 +18,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.blewandowicz.library_system.common.config.JwtProperties;
 
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.hibernate.mapping.UserDefinedArrayType;
 
 @SpringBootTest
 public class JwtUtilsTest {
     private JwtProperties jwtProperties;
     private JwtUtils jwtUtils;
     private String secret = "e6f1567c26387a1d0a1940bd950d35742741ff97efcf1e54bb78ddc45e408981";
-    private static final Logger log = LogManager.getLogger();
+    // private static final Logger log = LogManager.getLogger();
 
     @BeforeEach
     void setup() {
