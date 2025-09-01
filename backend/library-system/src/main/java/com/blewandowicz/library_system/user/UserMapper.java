@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-import com.blewandowicz.library_system.user.dto.UserCreateDTO;
+import com.blewandowicz.library_system.auth.dto.RegisterRequest;
 import com.blewandowicz.library_system.user.dto.UserFetchDTO;
 
 @Mapper
@@ -19,7 +19,8 @@ public interface UserMapper {
     @Mapping(target = "isStudent", ignore = true)
     @Mapping(target = "studentInstitiution", ignore = true)
     @Mapping(target = "studentProof", ignore = true)
-    User userCreateToUser(UserCreateDTO userCreateDTO);
+    @Mapping(source = "password", target = "passwordHash")
+    User registerToUser(RegisterRequest registerRequest);
 
     UserFetchDTO userToUserFetch(User user);
 }

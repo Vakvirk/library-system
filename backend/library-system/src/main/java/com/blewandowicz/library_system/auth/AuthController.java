@@ -8,9 +8,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.blewandowicz.library_system.user.dto.UserCreateDTO;
+import com.blewandowicz.library_system.auth.dto.AuthenticationRequest;
+import com.blewandowicz.library_system.auth.dto.AuthenticationResponse;
+import com.blewandowicz.library_system.auth.dto.RegisterRequest;
 import com.blewandowicz.library_system.user.dto.UserFetchDTO;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -19,13 +22,14 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
     private final AuthService authService;
 
-    @GetMapping("/{email}")
-    public ResponseEntity<UserFetchDTO> fetchUser(@PathVariable String email) {
-        return authService.fetchUser(email);
+    @GetMapping("/authenticate")
+    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request,
+            HttpServletResponse response) {
+        return ResponseEntity.ok(authService.authenticate(request, response));
     }
 
-    @PostMapping
-    public ResponseEntity<String> createUser(@RequestBody UserCreateDTO data) {
-        return authService.createUser(data);
+    @PostMapping("/register")
+    public ResponseEntity<String> register(@RequestBody RegisterRequest request, HttpServletResponse response) {
+        return authService.register(request, response);
     }
 }
