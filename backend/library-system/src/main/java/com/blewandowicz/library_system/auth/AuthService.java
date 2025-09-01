@@ -13,10 +13,10 @@ import com.blewandowicz.library_system.auth.jwt.JwtUtils;
 import com.blewandowicz.library_system.user.User;
 import com.blewandowicz.library_system.user.UserMapper;
 import com.blewandowicz.library_system.user.UserRepository;
-import com.blewandowicz.library_system.user.dto.UserFetchDTO;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -27,6 +27,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authManager;
 
+    @Transactional
     public ResponseEntity<String> register(RegisterRequest request, HttpServletResponse response) {
         String hashedPassword = passwordEncoder.encode(request.password());
         RegisterRequest withHashedPassword = new RegisterRequest(
