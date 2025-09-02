@@ -15,12 +15,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.test.context.TestPropertySource;
 
 import com.blewandowicz.library_system.common.config.JwtProperties;
 
 import io.jsonwebtoken.Jwts;
 
 @SpringBootTest
+@TestPropertySource("classpath:application-test.properties")
 public class JwtUtilsTest {
     private JwtProperties jwtProperties;
     private JwtUtils jwtUtils;
