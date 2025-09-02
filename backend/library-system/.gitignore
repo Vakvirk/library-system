@@ -1,4 +1,4 @@
-src/main/resources/application.properties
+
 
 HELP.md
 target/
@@ -33,4 +33,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+.env
 

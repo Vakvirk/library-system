@@ -18,30 +18,36 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final JWTAuthFilter jwtAuthFilter;
-    private final AuthenticationProvider authenticationProvider;
+        private final JWTAuthFilter jwtAuthFilter;
+        private final AuthenticationProvider authenticationProvider;
 
-    // TODO: csrf
+        // TODO: csrf
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        // 1. Nagłowki: referrerPolicy - ile info o nadawcy widać przy przkierowaniu
-        // 2. AuthRequest: ogólnodostępne endpointy (requestMatchers().permitAll), inne
-        // do uwierzytelniania (anyRequest().authenticated())
-        // 3. Sesja: bez sesji, STATELESS
-        // 4. AuthProvider ze springa
-        // 5. Ddodanie customowego filtra jwt przed standardowym uwierzytelnianiem
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+                // 1. Nagłowki: referrerPolicy - ile info o nadawcy widać przy przkierowaniu
+                // 2. AuthRequest: ogólnodostępne endpointy (requestMatchers().permitAll), inne
+                // do uwierzytelniania (anyRequest().authenticated())
+                // 3. Sesja: bez sesji, STATELESS
+                // 4. AuthProvider ze springa
+                // 5. Ddodanie customowego filtra jwt przed standardowym uwierzytelnianiem
 
-        http
-                .headers(headers -> headers.referrerPolicy(
-                        referrer -> referrer.policy(ReferrerPolicyHeaderWriter.ReferrerPolicy.NO_REFERRER)))
-                .authorizeHttpRequests(
-                        auth -> auth.requestMatchers("/api/auth/**").permitAll().anyRequest().authenticated())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                http
+                                .csrf(csrf -> csrf.disable())
+                                .headers(headers -> headers
+                                                .frameOptions(frame -> frame.sameOrigin())
+                                                .referrerPolicy(referrer -> referrer
+                                                                .policy(ReferrerPolicyHeaderWriter.ReferrerPolicy.NO_REFERRER)))
+                                .authorizeHttpRequests(
+                                                auth -> auth.requestMatchers("/api/auth/**", "/h2-console/**")
+                                                                .permitAll()
+                                                                .anyRequest().authenticated())
+                                .sessionManagement(session -> session
+                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                                .authenticationProvider(authenticationProvider)
+                                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
-        return http.build();
-    }
+                return http.build();
+        }
 
 }
