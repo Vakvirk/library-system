@@ -27,7 +27,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "refresh_tokens")
-public class refreshToken {
+public class RefreshToken {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
