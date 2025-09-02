@@ -11,6 +11,7 @@ import com.blewandowicz.library_system.auth.dto.AuthenticationRequest;
 import com.blewandowicz.library_system.auth.dto.AuthenticationResponse;
 import com.blewandowicz.library_system.auth.dto.RegisterRequest;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
@@ -29,5 +30,12 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterRequest request, HttpServletResponse response) {
         return authService.register(request, response);
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<AuthenticationResponse> refreshAccessToken(
+            HttpServletRequest request,
+            HttpServletResponse response) {
+        return ResponseEntity.ok(authService.refreshAuthorizationToken(request, response));
     }
 }
