@@ -17,12 +17,17 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class RefreshTokenService {
-    private final RefreshTokenRepository refreshTokenRepository;
 
+    private final RefreshTokenRepository refreshTokenRepository;
     private final JwtProperties jwtProperties;
+
+    // TODO: ExceptionHandler
 
     @Transactional
     public RefreshToken createRefreshToken(User user) {
+        if (user == null) {
+            throw new IllegalArgumentException("User nie może być null");
+        }
         refreshTokenRepository.deleteByUser(user);
         refreshTokenRepository.flush();
         RefreshToken token = RefreshToken.builder()
@@ -34,18 +39,32 @@ public class RefreshTokenService {
     }
 
     public RefreshToken verifyExpiration(RefreshToken token) {
+        if (token == null) {
+            throw new IllegalArgumentException("Token nie może być null.");
+        }
+        if (token.getExpiryDate() == null) {
+            throw new IllegalArgumentException("Token nie ma daty wygaśniecia.");
+        }
         if (token.getExpiryDate().isBefore(LocalDateTime.now())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Refresh token wygasł.");
         }
+
         return token;
     }
 
     public Optional<RefreshToken> findToken(String refreshTokenString) {
+        if (refreshTokenString == null || refreshTokenString.isBlank()) {
+            return Optional.empty();
+        }
         return refreshTokenRepository.findByToken(refreshTokenString);
     }
 
     @Transactional
     public int deleteByUser(User user) {
+        if (user == null) {
+            throw new IllegalArgumentException("User nie może być null");
+        }
+
         return refreshTokenRepository.deleteByUser(user);
     }
 }
