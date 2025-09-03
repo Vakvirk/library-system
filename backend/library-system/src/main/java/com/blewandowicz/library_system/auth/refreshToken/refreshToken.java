@@ -3,6 +3,9 @@ package com.blewandowicz.library_system.auth.refreshToken;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import com.blewandowicz.library_system.user.User;
 
 import jakarta.persistence.Column;
@@ -39,6 +42,7 @@ public class RefreshToken {
     private LocalDateTime createdAt;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
     // Przy utworzeniu
