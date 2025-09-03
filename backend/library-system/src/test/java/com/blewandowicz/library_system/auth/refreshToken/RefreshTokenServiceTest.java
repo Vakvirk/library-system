@@ -28,14 +28,12 @@ import org.mockito.Mock;
 
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.blewandowicz.library_system.common.config.JwtProperties;
 import com.blewandowicz.library_system.user.User;
 
 @ExtendWith(MockitoExtension.class)
-@TestPropertySource("classpath:application-test.properties")
 @DisplayName("RefreshTokenService Unit Tests")
 public class RefreshTokenServiceTest {
 
@@ -249,8 +247,8 @@ public class RefreshTokenServiceTest {
         }
 
         @Test
-        @DisplayName("Shoould throw exception when expiration date is null")
-        void verifyExpiration_ShouldThrowExcxeptionWhenExpiryDateNull() {
+        @DisplayName("Should throw exception when expiration date is null")
+        void verifyExpiration_ShouldThrowExceptionWhenExpiryDateNull() {
             RefreshToken noExpiryDate = RefreshToken.builder()
                     .id(UUID.randomUUID())
                     .user(testUser)
