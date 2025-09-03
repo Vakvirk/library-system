@@ -26,7 +26,7 @@ public class RefreshTokenService {
     @Transactional
     public RefreshToken createRefreshToken(User user) {
         if (user == null) {
-            throw new IllegalArgumentException("User nie może być null");
+            throw new IllegalArgumentException("User nie może być null.");
         }
         refreshTokenRepository.deleteByUser(user);
         refreshTokenRepository.flush();
@@ -62,7 +62,7 @@ public class RefreshTokenService {
     @Transactional
     public int deleteByUser(User user) {
         if (user == null) {
-            throw new IllegalArgumentException("User nie może być null");
+            throw new IllegalArgumentException("User nie może być null.");
         }
 
         return refreshTokenRepository.deleteByUser(user);
