@@ -4,10 +4,9 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-
+import com.blewandowicz.library_system.auth.refreshToken.exception.ExpiredRefreshTokenException;
+import com.blewandowicz.library_system.auth.refreshToken.exception.InvalidRefreshTokenException;
 import com.blewandowicz.library_system.common.config.JwtProperties;
 import com.blewandowicz.library_system.user.User;
 
@@ -21,12 +20,10 @@ public class RefreshTokenService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtProperties jwtProperties;
 
-    // TODO: ExceptionHandler
-
     @Transactional
     public RefreshToken createRefreshToken(User user) {
         if (user == null) {
-            throw new IllegalArgumentException("User nie może być null.");
+            throw new InvalidRefreshTokenException("User nie może być null.");
         }
         refreshTokenRepository.deleteByUser(user);
         refreshTokenRepository.flush();
@@ -40,13 +37,13 @@ public class RefreshTokenService {
 
     public RefreshToken verifyExpiration(RefreshToken token) {
         if (token == null) {
-            throw new IllegalArgumentException("Token nie może być null.");
+            throw new InvalidRefreshTokenException("Token nie może być null.");
         }
         if (token.getExpiryDate() == null) {
-            throw new IllegalArgumentException("Token nie ma daty wygaśniecia.");
+            throw new InvalidRefreshTokenException("Token musi posidadać datę wygaśnięcia.");
         }
         if (token.getExpiryDate().isBefore(LocalDateTime.now())) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Refresh token wygasł.");
+            throw new ExpiredRefreshTokenException("Refresh token wygasł.");
         }
 
         return token;
@@ -62,7 +59,7 @@ public class RefreshTokenService {
     @Transactional
     public Integer deleteByUser(User user) {
         if (user == null) {
-            throw new IllegalArgumentException("User nie może być null.");
+            throw new InvalidRefreshTokenException("User nie może być null.");
         }
 
         return refreshTokenRepository.deleteByUser(user);

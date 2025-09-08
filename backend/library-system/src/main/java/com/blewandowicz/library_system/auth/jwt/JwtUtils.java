@@ -10,6 +10,7 @@ import javax.crypto.SecretKey;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.blewandowicz.library_system.auth.exception.InvalidJWTException;
 import com.blewandowicz.library_system.common.config.JwtProperties;
 
 import io.jsonwebtoken.Claims;
@@ -27,7 +28,6 @@ public class JwtUtils {
     private final JwtProperties jwtProperties;
 
     // Generuje SecretKey do podpisu
-    // TODO: sprawdzić czy hmac legit
     private SecretKey getSignKey() {
         byte[] keyBytes = Decoders.BASE64.decode(jwtProperties.getSecret());
         return Keys.hmacShaKeyFor(keyBytes);
@@ -43,7 +43,7 @@ public class JwtUtils {
                     .parseSignedClaims(token)
                     .getPayload();
         } catch (JwtException e) {
-            throw new RuntimeException("Invalid JWT token");
+            throw new InvalidJWTException("Invalid JWT token");
         }
     }
 
@@ -86,7 +86,7 @@ public class JwtUtils {
         } catch (ExpiredJwtException e) {
             return e.getClaims().getSubject();
         } catch (JwtException e) {
-            throw new RuntimeException("Invalid JWT token");
+            throw new InvalidJWTException("Invalid JWT token");
         }
 
     }

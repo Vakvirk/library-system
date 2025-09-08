@@ -4,22 +4,26 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.blewandowicz.library_system.auth.dto.AuthenticationRequest;
 import com.blewandowicz.library_system.auth.dto.AuthenticationResponse;
 import com.blewandowicz.library_system.auth.dto.RegisterRequest;
+import com.blewandowicz.library_system.auth.exception.InvalidCredentialsException;
+import com.blewandowicz.library_system.auth.exception.RefreshTokenNotFoundException;
+import com.blewandowicz.library_system.auth.exception.UserNotFoundException;
+import com.blewandowicz.library_system.auth.exception.UsernameAlreadyExistsException;
 import com.blewandowicz.library_system.auth.jwt.JwtUtils;
 import com.blewandowicz.library_system.auth.refreshToken.RefreshToken;
 import com.blewandowicz.library_system.auth.refreshToken.RefreshTokenService;
+import com.blewandowicz.library_system.auth.refreshToken.exception.InvalidRefreshTokenException;
 import com.blewandowicz.library_system.user.User;
 import com.blewandowicz.library_system.user.UserMapper;
 import com.blewandowicz.library_system.user.UserRepository;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
@@ -56,6 +60,9 @@ public class AuthService {
 
     @Transactional
     public ResponseEntity<String> register(RegisterRequest request, HttpServletResponse response) {
+        if (userRepository.findByEmail(request.email()).isPresent()) {
+            throw new UsernameAlreadyExistsException("Ten adres email jest już zarejestrowany");
+        }
         String hashedPassword = passwordEncoder.encode(request.password());
         RegisterRequest withHashedPassword = new RegisterRequest(
                 request.name(),
@@ -69,9 +76,14 @@ public class AuthService {
 
     public AuthenticationResponse authenticate(AuthenticationRequest request,
             HttpServletResponse response) {
-        authManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
+        try {
+            authManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
+        } catch (BadCredentialsException ex) {
+            throw new InvalidCredentialsException("Invalid credentials");
+        }
+
         var user = userRepository.findByEmail(request.email())
-                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono uzytkownika po uwierzytelnieniu"));
+                .orElseThrow(() -> new UserNotFoundException("Nie znaleziono użytkownika w bazie danych"));
         var jwtToken = jwtUtils.generateToken(user);
         var refreshToken = refreshTokenService.createRefreshToken(user);
 
@@ -91,14 +103,14 @@ public class AuthService {
         String userEmail = jwtUtils.extractUsernameAlsoIfExpired(accessToken);
 
         User userFromToken = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika"));
+                .orElseThrow(() -> new UserNotFoundException("Nie znaleziono użytkownika w bazie danych"));
 
         RefreshToken refreshTokenEntity = refreshTokenService.findToken(refershToken)
                 .map(refreshTokenService::verifyExpiration)
-                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono tokenu"));
+                .orElseThrow(() -> new RefreshTokenNotFoundException("Nie znaleziono tokenu w bazie danych"));
 
         if (!refreshTokenEntity.getUser().getId().equals(userFromToken.getId())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Nieprawidłowy refresh token");
+            throw new InvalidRefreshTokenException("Nieprawidłowy refresh token");
         }
 
         RefreshToken newRefreshToken = refreshTokenService.createRefreshToken(refreshTokenEntity.getUser());
