@@ -60,7 +60,7 @@ public class RefreshTokenService {
     }
 
     @Transactional
-    public int deleteByUser(User user) {
+    public Integer deleteByUser(User user) {
         if (user == null) {
             throw new IllegalArgumentException("User nie może być null.");
         }

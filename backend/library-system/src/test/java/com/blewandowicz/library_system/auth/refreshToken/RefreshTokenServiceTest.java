@@ -322,7 +322,7 @@ public class RefreshTokenServiceTest {
 
             Integer result = refreshTokenService.deleteByUser(testUser);
 
-            assertEquals(1, result, "Should delete 1 row if user valid");
+            assertEquals(1, result, "Should delete if user valid");
             verify(refreshTokenRepository, times(1)).deleteByUser(testUser);
         }
 
@@ -333,7 +333,7 @@ public class RefreshTokenServiceTest {
 
             Integer result = refreshTokenService.deleteByUser(testUser);
 
-            assertEquals(0, result, "Should delete 0 rows when user not valid");
+            assertEquals(0, result, "Should not delete when user not valid");
             verify(refreshTokenRepository, times(1)).deleteByUser(testUser);
         }
 
