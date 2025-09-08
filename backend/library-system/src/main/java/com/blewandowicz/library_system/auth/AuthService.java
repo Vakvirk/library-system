@@ -38,6 +38,16 @@ public class AuthService {
     private final AuthenticationManager authManager;
     private final RefreshTokenService refreshTokenService;
 
+    /**
+     * Adds an HTTP-only "refreshToken" cookie to the given response.
+     *
+     * The cookie is named "refreshToken", contains the provided token value, has
+     * a max-age of 7 days, SameSite=Strict, and HttpOnly enabled. The cookie is
+     * written to the response via the "Set-Cookie" header.
+     *
+     * @param response     the HttpServletResponse to which the cookie will be added
+     * @param refreshToken the refresh token value to store in the cookie
+     */
     private void addRefreshTokenCookie(HttpServletResponse response, String refreshToken) {
         ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
@@ -47,6 +57,11 @@ public class AuthService {
         response.setHeader("Set-Cookie", cookie.toString());
     }
 
+    /**
+     * Retrieves the value of the "refreshToken" cookie from the given HTTP request.
+     *
+     * @return the refresh token string if the "refreshToken" cookie is present; otherwise {@code null}
+     */
     private String extractRefreshToken(HttpServletRequest request) {
         if (request.getCookies() != null) {
             for (var cookie : request.getCookies()) {
@@ -58,6 +73,19 @@ public class AuthService {
         return null;
     }
 
+    /**
+     * Registers a new user account.
+     *
+     * <p>Validates that the email from {@code request} is not already taken, hashes the provided
+     * password, maps the request to a User entity, persists it, and returns HTTP 200 with a
+     * success message.
+     *
+     * @param request  registration data (name, lastName, email, password); the plaintext password
+     *                 will be hashed before persistence
+     * @param response HTTP response (used by flow for cookie handling elsewhere)
+     * @return HTTP 200 OK with a success message when registration completes
+     * @throws UsernameAlreadyExistsException if an account with the given email already exists
+     */
     @Transactional
     public ResponseEntity<String> register(RegisterRequest request, HttpServletResponse response) {
         if (userRepository.findByEmail(request.email()).isPresent()) {
@@ -74,6 +102,20 @@ public class AuthService {
         return ResponseEntity.ok("Pomyślnie zarejestrowano.");
     }
 
+    /**
+     * Authenticates a user and issues authentication tokens.
+     *
+     * Attempts to authenticate with the provided credentials, loads the user record,
+     * generates a JWT access token and a refresh token, sets the refresh token in an
+     * HTTP-only cookie on the given response, and returns an AuthenticationResponse
+     * containing the JWT.
+     *
+     * @param request  authentication credentials (email and password)
+     * @param response HTTP response used to add the refresh-token cookie
+     * @return an AuthenticationResponse containing the issued JWT access token
+     * @throws InvalidCredentialsException if authentication fails due to bad credentials
+     * @throws UserNotFoundException      if a user with the provided email does not exist
+     */
     public AuthenticationResponse authenticate(AuthenticationRequest request,
             HttpServletResponse response) {
         try {
@@ -95,6 +137,18 @@ public class AuthService {
 
     }
 
+    /**
+     * Refreshes the user's access and refresh tokens using the access token (may be expired) and the refresh token from the request.
+     *
+     * <p>The method extracts the access token and the refresh token (from a cookie), derives the user from the access token,
+     * verifies the refresh token exists, is not expired, and belongs to that user, then issues a new access token and a new
+     * refresh token. The new refresh token is written to an HttpOnly cookie on the response.
+     *
+     * @return an AuthenticationResponse containing the newly generated access (JWT) token
+     * @throws UserNotFoundException if no user is found for the email extracted from the access token
+     * @throws RefreshTokenNotFoundException if the refresh token cookie is missing or the token cannot be found in storage
+     * @throws InvalidRefreshTokenException if the refresh token does not belong to the user identified by the access token
+     */
     @Transactional
     public AuthenticationResponse refreshAuthorizationToken(HttpServletRequest request, HttpServletResponse response) {
         String accessToken = jwtUtils.extractToken(request);

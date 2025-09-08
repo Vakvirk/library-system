@@ -25,7 +25,29 @@ public class JWTAuthFilter extends OncePerRequestFilter {
     final JwtUtils jwtUtils;
     final UserDetailsService userDetailsService;
 
-    // Logika filtra JWT
+    /**
+     * Authenticates an HTTP request using a JWT from the `Authorization: Bearer ...` header
+     * and, when the token is valid, populates the Spring Security context with an authenticated
+     * principal for the remainder of the request.
+     *
+     * <p>Behavior:
+     * - Requests whose servlet path starts with {@code /api/auth} are left untouched and proceed
+     *   down the filter chain.
+     * - If the {@code Authorization} header is absent or does not start with {@code "Bearer "},
+     *   the filter does not attempt authentication and continues the chain.
+     * - Otherwise the JWT is extracted, the username is resolved via {@code jwtUtils}, and if
+     *   there is no existing authentication in the {@code SecurityContext}, the user details are
+     *   loaded and the token is validated. When valid, a {@code UsernamePasswordAuthenticationToken}
+     *   with the user's authorities is stored in the {@code SecurityContextHolder}.
+     *
+     * <p>If the token is missing or invalid, no authentication is set and the request proceeds normally.
+     *
+     * @param request     the current HTTP request
+     * @param response    the current HTTP response
+     * @param filterChain the filter chain to continue when this filter is done
+     * @throws ServletException if an error occurs during request processing
+     * @throws IOException      if an I/O error occurs during request processing
+     */
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,

@@ -63,36 +63,70 @@ public class User implements UserDetails {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    // Implementacja UserDetails
+    /**
+     * Indicates whether the user account is enabled for authentication.
+     *
+     * @return true if the user's account is active (eligible for authentication); false otherwise
+     */
 
     @Override
     public boolean isEnabled() {
         return isActive;
     }
 
+    /**
+     * Returns the authorities granted to the user.
+     *
+     * <p>The collection contains a single SimpleGrantedAuthority constructed from this user's role.
+     *
+     * @return an immutable collection with one authority representing the user's role
+     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role));
     }
 
+    /**
+     * Returns the stored password used for authentication.
+     *
+     * <p>Returns the password hash associated with this user as required by
+     * Spring Security's {@code UserDetails}.</p>
+     *
+     * @return the user's password hash
+     */
     @Override
     public String getPassword() {
         return passwordHash;
     }
 
+    /**
+     * Returns the principal username for authentication.
+     *
+     * <p>Uses the user's email as the username (principal) for Spring Security.
+     *
+     * @return the user's email used as the username/principal
+     */
     @Override
     public String getUsername() {
         return email;
     }
 
-    // Przy utowrzeniu
+    /**
+     * JPA lifecycle callback invoked before the entity is persisted.
+     *
+     * Sets both {@code createdAt} and {@code updatedAt} to the current local date‑time
+     * so new entities have creation and last-modified timestamps.
+     */
     @PrePersist
     public void PrePersist() {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }
 
-    // Przy updacie
+    /**
+     * JPA lifecycle callback invoked before the entity is updated; sets {@code updatedAt}
+     * to the current local date-time.
+     */
     @PreUpdate
     public void PreUpdate() {
         updatedAt = LocalDateTime.now();

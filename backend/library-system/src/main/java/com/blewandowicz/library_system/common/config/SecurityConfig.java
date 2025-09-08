@@ -21,7 +21,18 @@ public class SecurityConfig {
         private final JWTAuthFilter jwtAuthFilter;
         private final AuthenticationProvider authenticationProvider;
 
-        // TODO: csrf
+        /**
+         * Configures and builds the application's Spring Security filter chain.
+         *
+         * <p>Disables CSRF, sets frame and referrer headers, permits unauthenticated access to
+         * "/api/auth/**" and "/h2-console/**", requires authentication for all other requests,
+         * enforces stateless session management, registers the provided AuthenticationProvider,
+         * returns JSON error responses for unauthenticated or forbidden requests, and inserts the
+         * JWT authentication filter before the standard UsernamePasswordAuthenticationFilter.
+         *
+         * @return the configured SecurityFilterChain
+         * @throws Exception if building the security filter chain fails
+         */
 
         @Bean
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

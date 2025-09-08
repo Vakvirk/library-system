@@ -45,13 +45,23 @@ public class RefreshToken {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
-    // Przy utworzeniu
+    /**
+     * JPA lifecycle callback invoked before the entity is persisted.
+     *
+     * Sets the createdAt timestamp to the current system date-time if not already set.
+     */
     @PrePersist
     public void PrePersist() {
         createdAt = LocalDateTime.now();
     }
 
-    // Utility klasy
+    /**
+     * Returns whether this refresh token is expired.
+     *
+     * Compares the current system time to the token's {@code expiryDate}.
+     *
+     * @return {@code true} if the current time is after {@code expiryDate}; {@code false} otherwise
+     */
     public boolean isExpired() {
         return LocalDateTime.now().isAfter(expiryDate);
     }

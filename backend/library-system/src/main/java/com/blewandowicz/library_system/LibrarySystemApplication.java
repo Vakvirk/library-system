@@ -8,6 +8,14 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 @ConfigurationPropertiesScan
 public class LibrarySystemApplication {
 
+	/**
+	 * Application entry point; bootstraps and starts the Spring Boot application.
+	 *
+	 * <p>Delegates to SpringApplication.run(...) using this class as the primary source
+	 * of configuration. Any exceptions thrown during startup propagate to the caller.
+	 *
+	 * @param args command-line arguments forwarded to the Spring application
+	 */
 	public static void main(String[] args) {
 		SpringApplication.run(LibrarySystemApplication.class, args);
 	}
