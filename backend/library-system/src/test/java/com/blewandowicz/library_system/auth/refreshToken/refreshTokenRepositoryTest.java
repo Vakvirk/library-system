@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,7 +37,6 @@ public class refreshTokenRepositoryTest {
     private User testUser2;
     private RefreshToken validToken1;
     private RefreshToken validToken2;
-    private RefreshToken expiredToken;
 
     @BeforeEach
     void setUp() {
@@ -64,11 +62,6 @@ public class refreshTokenRepositoryTest {
         validToken2 = RefreshToken.builder()
                 .token("valid-token-2-" + UUID.randomUUID())
                 .expiryDate(LocalDateTime.now().plusHours(2L))
-                .build();
-
-        expiredToken = RefreshToken.builder()
-                .token("Expired-token-" + UUID.randomUUID())
-                .expiryDate(LocalDateTime.now().minusHours(1L))
                 .build();
     }
 
