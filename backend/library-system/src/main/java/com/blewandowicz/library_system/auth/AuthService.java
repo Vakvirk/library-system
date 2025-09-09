@@ -1,6 +1,5 @@
 package com.blewandowicz.library_system.auth;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -97,28 +96,29 @@ public class AuthService {
 
     @Transactional
     public AuthenticationResponse refreshAuthorizationToken(HttpServletRequest request, HttpServletResponse response) {
-        String accessToken = jwtUtils.extractToken(request);
-        String refershToken = extractRefreshToken(request);
-
-        String userEmail = jwtUtils.extractUsernameAlsoIfExpired(accessToken);
-
-        User userFromToken = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new UserNotFoundException("Nie znaleziono użytkownika w bazie danych"));
-
-        RefreshToken refreshTokenEntity = refreshTokenService.findToken(refershToken)
+        String refreshToken = extractRefreshToken(request);
+        if (refreshToken == null || refreshToken.trim().isEmpty()) {
+            throw new InvalidRefreshTokenException("Brak refresh tokenu.");
+        }
+        RefreshToken refreshTokenEntity = refreshTokenService.findToken(refreshToken)
                 .map(refreshTokenService::verifyExpiration)
-                .orElseThrow(() -> new RefreshTokenNotFoundException("Nie znaleziono tokenu w bazie danych"));
+                .orElseThrow(() -> new RefreshTokenNotFoundException("Nie znaleziono refresh tokena w bazie"));
 
-        if (!refreshTokenEntity.getUser().getId().equals(userFromToken.getId())) {
-            throw new InvalidRefreshTokenException("Nieprawidłowy refresh token");
+        User user = userRepository.findByEmail(refreshTokenEntity.getUser().getEmail())
+                .orElseThrow(() -> new UserNotFoundException(
+                        "Użytkownik skojarzony z tym refresh tokenem nie znajduje się w bazie danych"));
+
+        if (!user.isEnabled() || !user.isActive()) {
+            throw new RuntimeException("Ten użytkownik jest wyłączony lub niektywny");
         }
 
-        RefreshToken newRefreshToken = refreshTokenService.createRefreshToken(refreshTokenEntity.getUser());
-
-        String newAccessToken = jwtUtils.generateToken(newRefreshToken.getUser());
+        RefreshToken newRefreshToken = refreshTokenService.createRefreshToken(user);
+        String newAccessToken = jwtUtils.generateToken(user);
 
         AuthenticationResponse authResponse = AuthenticationResponse.builder().jwt(newAccessToken).build();
         addRefreshTokenCookie(response, newRefreshToken.getToken());
+
         return authResponse;
+
     }
 }

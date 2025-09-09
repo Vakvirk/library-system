@@ -42,6 +42,7 @@ public class SecurityConfig {
                                                 auth -> auth.requestMatchers("/api/auth/**", "/h2-console/**")
                                                                 .permitAll()
                                                                 .anyRequest().authenticated())
+                                // auth -> auth.anyRequest().permitAll())
                                 .sessionManagement(session -> session
                                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                                 .authenticationProvider(authenticationProvider)

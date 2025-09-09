@@ -27,9 +27,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
 
+import com.blewandowicz.library_system.auth.refreshToken.exception.ExpiredRefreshTokenException;
+import com.blewandowicz.library_system.auth.refreshToken.exception.InvalidRefreshTokenException;
 import com.blewandowicz.library_system.common.config.JwtProperties;
 import com.blewandowicz.library_system.user.User;
 
@@ -170,8 +170,8 @@ public class RefreshTokenServiceTest {
 
             // Act + Assert
 
-            IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                    () -> refreshTokenService.createRefreshToken(null), "Should throw IllegalArgumentException");
+            InvalidRefreshTokenException exception = assertThrows(InvalidRefreshTokenException.class,
+                    () -> refreshTokenService.createRefreshToken(null), "Should throw InvalidRefreshTokenException");
             assertEquals("User nie może być null.", exception.getMessage(), "Should display correct message");
         }
     }
@@ -204,12 +204,11 @@ public class RefreshTokenServiceTest {
                     .build();
 
             // Act + Assert - wyjątki weryfikuje przy wywołaniu
-            ResponseStatusException exception = assertThrows(ResponseStatusException.class,
+            ExpiredRefreshTokenException exception = assertThrows(ExpiredRefreshTokenException.class,
                     () -> refreshTokenService.verifyExpiration(invalidToken),
-                    "Should throw ResponseStatusException");
+                    "Should throw ExpiredRefreshTokenException");
 
-            assertEquals(HttpStatus.FORBIDDEN, exception.getStatusCode(), "Exception should have FORBIDDEN status.");
-            assertEquals("Refresh token wygasł.", exception.getReason(),
+            assertEquals("Refresh token wygasł.", exception.getMessage(),
                     "Exception should have correct error message.");
         }
 
@@ -225,12 +224,11 @@ public class RefreshTokenServiceTest {
                     .build();
 
             // Act + Assert - wyjątki weryfikuje przy wywołaniu
-            ResponseStatusException exception = assertThrows(ResponseStatusException.class,
+            ExpiredRefreshTokenException exception = assertThrows(ExpiredRefreshTokenException.class,
                     () -> refreshTokenService.verifyExpiration(expiresNow),
                     "Should throw ResponseStatusException");
 
-            assertEquals(HttpStatus.FORBIDDEN, exception.getStatusCode(), "Exception should have FORBIDDEN status.");
-            assertEquals("Refresh token wygasł.", exception.getReason(),
+            assertEquals("Refresh token wygasł.", exception.getMessage(),
                     "Exception should have correct error message.");
         }
 
@@ -241,8 +239,8 @@ public class RefreshTokenServiceTest {
 
             // Act + Assert
 
-            IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                    () -> refreshTokenService.verifyExpiration(null), "Should throw IllegalArgumentException");
+            InvalidRefreshTokenException exception = assertThrows(InvalidRefreshTokenException.class,
+                    () -> refreshTokenService.verifyExpiration(null), "Should throw InvalidRefreshTokenException");
             assertEquals("Token nie może być null.", exception.getMessage(), "Should display correct message");
         }
 
@@ -256,9 +254,11 @@ public class RefreshTokenServiceTest {
                     .expiryDate(null)
                     .build();
 
-            IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                    () -> refreshTokenService.verifyExpiration(noExpiryDate), "Should throw IllegalArgumentException");
-            assertEquals("Token nie ma daty wygaśniecia.", exception.getMessage(), "Should display correct message");
+            InvalidRefreshTokenException exception = assertThrows(InvalidRefreshTokenException.class,
+                    () -> refreshTokenService.verifyExpiration(noExpiryDate),
+                    "Should throw InvalidRefreshTokenException");
+            assertEquals("Token musi posiadać datę wygaśnięcia.", exception.getMessage(),
+                    "Should display correct message");
         }
     }
 
@@ -340,8 +340,8 @@ public class RefreshTokenServiceTest {
         @Test
         @DisplayName("Should throw exception when user is null")
         void deleteByUser_ShouldThrowExceptionWhenUserNull() {
-            IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                    () -> refreshTokenService.deleteByUser(null), "Should throw IllegalArgumentException.");
+            InvalidRefreshTokenException exception = assertThrows(InvalidRefreshTokenException.class,
+                    () -> refreshTokenService.deleteByUser(null), "Should throw InvalidRefreshTokenException.");
 
             assertEquals("User nie może być null.", exception.getMessage(), "Should display correct message");
         }

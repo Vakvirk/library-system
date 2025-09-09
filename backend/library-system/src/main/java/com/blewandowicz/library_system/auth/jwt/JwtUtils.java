@@ -83,6 +83,8 @@ public class JwtUtils {
                     .parseSignedClaims(token)
                     .getPayload()
                     .getSubject();
+        } catch (IllegalArgumentException e) {
+            return null;
         } catch (ExpiredJwtException e) {
             return e.getClaims().getSubject();
         } catch (JwtException e) {

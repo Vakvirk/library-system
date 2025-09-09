@@ -40,7 +40,7 @@ public class RefreshTokenService {
             throw new InvalidRefreshTokenException("Token nie może być null.");
         }
         if (token.getExpiryDate() == null) {
-            throw new InvalidRefreshTokenException("Token musi posidadać datę wygaśnięcia.");
+            throw new InvalidRefreshTokenException("Token musi posiadać datę wygaśnięcia.");
         }
         if (token.getExpiryDate().isBefore(LocalDateTime.now())) {
             throw new ExpiredRefreshTokenException("Refresh token wygasł.");
